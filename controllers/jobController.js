@@ -44,4 +44,20 @@ const updateJob = async (req, res) => {
     })
     res.status(200).json(updatedJob)
 }
-module.exports = { getJobs, getJob, createJob, updateJob }
+
+const deleteJob = async (req, res) => {
+    const { id } = req.params
+    if (!mongoose.isValidObjectId(id)) {
+        return res.status(400).json({ error: 'Invalid job ID format' })
+    }
+    const job = await Job.findById(id)
+    if (!job) {
+        return res.status(404).json({ message: "Job not found" })
+    }
+    await Job.findByIdAndDelete(id)
+    res.status(200).json({
+        id: req.params.id,
+        name: job.title
+    })
+}
+module.exports = { getJobs, getJob, createJob, updateJob, deleteJob }
