@@ -2,10 +2,30 @@ const mongoose = require('mongoose')
 const { Job, validateJob } = require('../models/jobsModel')
 
 const getJobs = async (req, res) => {
-    let { page, limit } = req.query
-    limit = Number(limit)
-    page = Number(page)
-    let response = await Job.find()
+    let { page, limit, title, experience, location, sortBy } = req.query
+    limit = Number(limit) || 10
+    page = Number(page) || 1
+    const skip = (page - 1) * limit
+    const filter = {}
+    let query;
+    if (title) {
+        filter.title = title
+    }
+    if (experience) {
+        filter.experience = experience
+    }
+    if (location) {
+        filter.location = location
+    }
+    query = await Job.find(filter).skip(skip).limit(Number(limit))
+    let totalJobs = await Job.countDocuments(filter);
+    const totalPages = Math.ceil(totalJobs / Number(limit))
+    const response = {
+        allRecords: totalJobs,
+        pages: totalPages,
+        currentPage: page,
+        records: query
+    }
     res.status(200).json(response)
 }
 
