@@ -10,8 +10,8 @@ const { userSortOptions } = require('./filterandsort');
 //@route    Post api/users
 //access    Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password, role } = req.body
-    if (!name || !email || !password) {
+    const { email, password, } = req.body
+    if ( !email || !password) {
         res.status(400)
         throw new Error('Please add all fields')
     }
@@ -26,17 +26,13 @@ const registerUser = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt)
     //create User
     const user = await User.create({
-        name,
         email,
         password: hashedPassword,
-        role,
     })
     if (user) {
         res.status(201).json({
             _id: user.id,
-            name: user.name,
             email: user.email,
-            role: user.role,
             token: generateToken(user._id)
         })
     }
