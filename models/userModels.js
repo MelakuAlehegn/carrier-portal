@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
-    name: {
+    firstName: {
         type: String,
-        required: [true, 'please add Your name']
+    },
+    lastName: {
+        type: String,
     },
     email: {
         type: String,
@@ -16,7 +18,7 @@ const userSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['candidate', 'admin', 'superadmin'],
+        enum: ['candidate', 'employee', 'admin', 'superadmin'],
         default: 'candidate'
     },
     status:{
@@ -24,6 +26,18 @@ const userSchema = mongoose.Schema({
     },
     phone_number:{
         type: Number,
+    },
+    photo:{
+        type: URL,
+    },
+    attachments:{
+        type: URL,
+    },
+    department:{
+        type: String,
+    },
+    bio:{
+        type: String,
     }
 },
     {
