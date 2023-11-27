@@ -9,8 +9,8 @@
     >
       <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 1" :jobId="1" />
       <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 2" :jobId="2" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 3" :jobId="3" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 4" :jobId="4" />
+      <SingleJob :selected="selectedJob === 3" :jobId="3" />
+      <SingleJob :selected="selectedJob === 4" :jobId="4" />
       <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 5" :jobId="5" />
       <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 6" :jobId="6" />
       <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 7" :jobId="7" />
