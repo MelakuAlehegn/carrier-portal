@@ -10,6 +10,10 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    qualifications: {
+        type: [String],
+        required: false
+    },
     createdBy: {
         type: String,
         required: false
@@ -33,7 +37,17 @@ const jobSchema = new mongoose.Schema({
     location: {
         type: String,
         required: false
+    },
+    skills: {
+        type: [String],
+        required: false
+    },
+    salary: {
+        type: String,
+        required: false,
+        default: "Not Disclosed"
     }
+
 },
     { timestamps: true }
 )
@@ -41,12 +55,15 @@ const jobSchema = new mongoose.Schema({
 const jobValidateSchema = Joi.object({
     title: Joi.string().required(),
     description: Joi.string().required(),
+    qualifications: Joi.array().items(Joi.string()),
     createdBy: Joi.string(),
     department: Joi.string(),
     client: Joi.string(),
     experience: Joi.string(),
     contract: Joi.string(),
     location: Joi.string(),
+    skills: Joi.array().items(Joi.string()),
+    salary: Joi.string().optional().default("Not Disclosed")
 })
 
 const Job = mongoose.model('Job', jobSchema)
