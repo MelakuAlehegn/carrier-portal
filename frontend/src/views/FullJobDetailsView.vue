@@ -2,7 +2,7 @@
   <div class="bg-white container mx-auto my-10 py-10 px-3 rounded-3xl">
     <div class="">
       <div>
-        <div class="flex relative mt-0">
+        <div class="flex relative mt-0 ml-7">
           <svg
             class="cursor-pointer mt-2"
             height="30px"
@@ -14,7 +14,7 @@
               d="M39.3756,48.0022l30.47-25.39a6.0035,6.0035,0,0,0-7.6878-9.223L26.1563,43.3906a6.0092,6.0092,0,0,0,0,9.2231L62.1578,82.615a6.0035,6.0035,0,0,0,7.6878-9.2231Z"
             />
           </svg>
-          <div class="absolute left-[40%]">
+          <div class="absolute left-[36%]">
             <h2 class="font-bold text-2xl mb-1">UI/UX Designer</h2>
             <h2 class="text-darkerGrey">Addis Ababa, Ethiopia</h2>
           </div>
@@ -23,8 +23,8 @@
       </div>
     </div>
     <div class="flex">
-      <div class="w-1/2 mx-5 flex flex-col gap-7">
-        <div>
+      <div class="w-[45%] mx-5 flex flex-col gap-7">
+        <div class="flex flex-col gap-4">
           <div class="mt-6 flex gap-1 items-center">
             <svg
               class="ml-5 h-5 fill-bluePrimary"
@@ -40,7 +40,7 @@
             </svg>
             <h2 class="font-bold text-bluePrimary">Job Description</h2>
           </div>
-          <p class="text-darkerGrey ml-6">
+          <p class="text-darkerGrey ml-6 pl-4">
             We are looking for a UI/UX Designer to turn our software into easy-to-use products for
             our clients. UI/UX Designer responsibilities include gathering user requirements,
             designing graphic elements and building navigation components. To be successful in this
@@ -79,8 +79,24 @@
             <Labels :text="'TailwindCSS'" />
             <Labels :text="'UI/UX'" />
           </div>
-          <div>
-            <p>Contract Type:</p>
+          <div class="flex justify-between px-6 mr-6">
+            <div>
+              <p class="text-bluePrimary font-bold text-base mb-2">
+                Experience:
+                <span class="text-darkerGrey font-normal capitalize ml-2">3+ years</span>
+              </p>
+              <p class="text-bluePrimary font-bold text-base">
+                Contract: <span class="text-darkerGrey font-normal capitalize ml-2">fulltime</span>
+              </p>
+            </div>
+            <div>
+              <p class="text-bluePrimary font-bold text-base mb-2">
+                Department: <span class="text-darkerGrey capitalize font-normal ml-2">IT</span>
+              </p>
+              <p class="text-bluePrimary font-bold text-base">
+                Salary: <span class="text-darkerGrey capitalize font-normal ml-2">2000 USD</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -91,7 +107,7 @@
             <div>
               <label for="">First name</label>
               <input
-                class="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-3 font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:border-2 focus:shadow-lg"
+                class="w-full rounded-md bg-[#F5F7FB] py-3 px-3 font-medium text-[#6B7280] outline-none"
                 type="text"
                 name="firstname"
                 placeholder="Firstname"
@@ -100,7 +116,7 @@
             <div>
               <label for="">Last name</label>
               <input
-                class="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-3 font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:border-2 focus:shadow-lg"
+                class="w-full rounded-md bg-[#F5F7FB] py-3 px-3 font-medium text-[#6B7280] outline-none"
                 type="search"
                 name="lastname"
                 placeholder="Lastname"
@@ -110,7 +126,7 @@
           <div class="flex flex-col">
             <label for="">Email</label>
             <input
-              class="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-3 font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:border-2 focus:shadow-lg"
+              class="w-full rounded-md bg-[#F5F7FB] py-3 px-3 font-medium text-[#6B7280] outline-none"
               type="email"
               name="email"
               placeholder="example@domain.com"
@@ -119,7 +135,7 @@
           <div class="flex flex-col">
             <label for="">Phone Number</label>
             <input
-              class="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-3 font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:border-2 focus:shadow-lg"
+              class="w-full rounded-md bg-[#F5F7FB] py-3 px-3 font-medium text-[#6B7280] outline-none"
               type="tel"
               name="phonenumer"
               pattern="[0-9]{10}"
@@ -149,7 +165,7 @@
             <div class="rounded-md bg-[#F5F7FB] py-4 px-8">
               <div class="flex items-center justify-between">
                 <span class="truncate pr-3 text-base font-medium text-[#07074D]"> my-cv.pdf </span>
-                <span class="font-bold cursor-pointer">X</span>
+                <span class="font-bold cursor-pointer hover:text-orangePrimary">&#10006;</span>
               </div>
             </div>
           </div>
