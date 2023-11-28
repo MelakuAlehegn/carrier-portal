@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+const asyncHandler = require('express-async-handler')
 const { Job, validateJob } = require('../models/jobsModel')
 
-const getJobs = async (req, res) => {
+const getJobs = asyncHandler(async (req, res) => {
     let { page, limit, title, experience, location, sortBy } = req.query
     limit = Number(limit) || 10
     page = Number(page) || 1
@@ -27,9 +28,9 @@ const getJobs = async (req, res) => {
         records: query
     }
     res.status(200).json(response)
-}
+})
 
-const getJob = async (req, res) => {
+const getJob = asyncHandler(async (req, res) => {
     let jobId = req.params.id
     if (!mongoose.isValidObjectId(jobId)) {
         return res.status(400).json({ error: 'Invalid job ID format' })
@@ -39,18 +40,18 @@ const getJob = async (req, res) => {
         return res.status(400).json({ error: 'Job not found' })
     }
     return res.status(200).json(job)
-}
+})
 
-const createJob = async (req, res) => {
+const createJob = asyncHandler(async (req, res) => {
     const { error } = validateJob(req.body)
     if (error) {
         return res.status(400).json(error.details[0].message)
     }
     const job = await Job.create(req.body)
     return res.status(201).json(job)
-}
+})
 
-const updateJob = async (req, res) => {
+const updateJob = asyncHandler(async (req, res) => {
     const { id } = req.params
     if (!mongoose.isValidObjectId(id)) {
         return res.status(400).json({ error: 'Invalid job ID format' })
@@ -63,9 +64,9 @@ const updateJob = async (req, res) => {
         new: true
     })
     res.status(200).json(updatedJob)
-}
+})
 
-const deleteJob = async (req, res) => {
+const deleteJob = asyncHandler(async (req, res) => {
     const { id } = req.params
     if (!mongoose.isValidObjectId(id)) {
         return res.status(400).json({ error: 'Invalid job ID format' })
@@ -79,5 +80,5 @@ const deleteJob = async (req, res) => {
         id: req.params.id,
         name: job.title
     })
-}
+})
 module.exports = { getJobs, getJob, createJob, updateJob, deleteJob }

@@ -79,6 +79,9 @@
             <Labels :text="'TailwindCSS'" />
             <Labels :text="'UI/UX'" />
           </div>
+          <div>
+            <p>Contract Type:</p>
+          </div>
         </div>
       </div>
       <div class="w-2/5 apply text-bluePrimary pl-12 py-10 rounded-3xl ml-auto mr-5">
