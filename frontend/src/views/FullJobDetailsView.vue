@@ -94,7 +94,8 @@
                 Department: <span class="text-darkerGrey capitalize font-normal ml-2">IT</span>
               </p>
               <p class="text-bluePrimary font-bold text-base">
-                Salary: <span class="text-darkerGrey capitalize font-normal ml-2">2000 USD</span>
+                Salary:
+                <span class="text-darkerGrey capitalize font-normal ml-2">Not Disclosed</span>
               </p>
             </div>
           </div>
