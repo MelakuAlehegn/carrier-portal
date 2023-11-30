@@ -8,21 +8,24 @@
       class="flex flex-col gap-5 py-3 transform origin-left"
     >
       <SingleJob
-        v-for="job in jobs.jobList"
+        v-for="(job, index) in jobs.jobList"
         :key="job._id"
-        @jobClick="handleJobClick"
-        :selected="selectedJob === index + 1"
+        @jobClick="handleJobClick(index)"
+        :isSelected="selectedJob === index"
         :job="job"
       />
     </div>
-    <JobDetails :selectedJob="selectedJob" v-if="jobClicked" @closeDetails="handleCloseDetails" />
+    <JobDetails
+      v-if="jobClicked && selectedJob !== null"
+      :job="jobs.jobList[selectedJob]"
+      @closeDetails="handleCloseDetails"
+    />
   </div>
 </template>
 
 <script>
 import JobDetails from './JobDetails.vue'
 import SingleJob from './SingleJob.vue'
-import { getJobs } from '../../services/JobsService'
 import { useJobStore } from '../../stores/JobStore'
 
 export default {
@@ -37,27 +40,15 @@ export default {
       jobs: {}
     }
   },
-  computed: {
-    sortedJobs() {
-      return this.jobs.records.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    }
-  },
   async created() {
-    // try {
-    //   const response = await getJobs()
-    //   // const response = await axios.get('http://localhost:8000/api/jobs')
-    //   this.jobs = response.data
-    // } catch (err) {
-    //   console.error('Error fetching jobs:', err)
-    // }
     const jobStore = useJobStore()
     await jobStore.fetchJobs()
     this.jobs.jobList = jobStore.jobList
   },
   methods: {
-    handleJobClick(jobId) {
+    handleJobClick(index) {
       this.jobClicked = true
-      this.selectedJob = jobId
+      this.selectedJob = index
     },
     handleCloseDetails() {
       this.jobClicked = false

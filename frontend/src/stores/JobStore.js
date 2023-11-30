@@ -7,7 +7,7 @@ export const useJobStore = defineStore('jobs', () => {
 
     async function fetchJobs() {
         const { data } = await getJobs();
-        jobList.value = data.records;
+        jobList.value = data.records.reverse();
     }
 
     //   const filterInterviewer = computed(() =>
