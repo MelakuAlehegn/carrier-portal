@@ -7,23 +7,23 @@
       }"
       class="flex flex-col gap-5 py-3 transform origin-left"
     >
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 1" :jobId="1" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 2" :jobId="2" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 3" :jobId="3" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 4" :jobId="4" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 5" :jobId="5" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 6" :jobId="6" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 7" :jobId="7" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 8" :jobId="8" />
-      <SingleJob @jobClick="handleJobClick" :selected="selectedJob === 9" :jobId="9" />
+      <SingleJob
+        v-for="job in jobs.jobList"
+        :key="job._id"
+        @jobClick="handleJobClick"
+        :selected="selectedJob === index + 1"
+        :job="job"
+      />
     </div>
-    <JobDetails v-if="jobClicked" @closeDetails="handleCloseDetails" />
+    <JobDetails :selectedJob="selectedJob" v-if="jobClicked" @closeDetails="handleCloseDetails" />
   </div>
 </template>
 
 <script>
 import JobDetails from './JobDetails.vue'
 import SingleJob from './SingleJob.vue'
+import { getJobs } from '../../services/JobsService'
+import { useJobStore } from '../../stores/JobStore'
 
 export default {
   components: {
@@ -33,8 +33,26 @@ export default {
   data() {
     return {
       jobClicked: false,
-      selectedJob: null
+      selectedJob: null,
+      jobs: {}
     }
+  },
+  computed: {
+    sortedJobs() {
+      return this.jobs.records.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    }
+  },
+  async created() {
+    // try {
+    //   const response = await getJobs()
+    //   // const response = await axios.get('http://localhost:8000/api/jobs')
+    //   this.jobs = response.data
+    // } catch (err) {
+    //   console.error('Error fetching jobs:', err)
+    // }
+    const jobStore = useJobStore()
+    await jobStore.fetchJobs()
+    this.jobs.jobList = jobStore.jobList
   },
   methods: {
     handleJobClick(jobId) {
