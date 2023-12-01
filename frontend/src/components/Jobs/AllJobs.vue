@@ -8,7 +8,7 @@
       class="flex flex-col gap-5 py-3 transform origin-left"
     >
       <SingleJob
-        v-for="(job, index) in jobs.jobList"
+        v-for="(job, index) in jobs"
         :key="job._id"
         @jobClick="handleJobClick(index)"
         :isSelected="selectedJob === index"
@@ -17,7 +17,7 @@
     </div>
     <JobDetails
       v-if="jobClicked && selectedJob !== null"
-      :job="jobs.jobList[selectedJob]"
+      :job="jobs[selectedJob]"
       @closeDetails="handleCloseDetails"
     />
   </div>
@@ -43,7 +43,12 @@ export default {
   async created() {
     const jobStore = useJobStore()
     await jobStore.fetchJobs()
-    this.jobs.jobList = jobStore.jobList
+  },
+  computed: {
+    jobs() {
+      const jobStore = useJobStore()
+      return jobStore.newJobs
+    }
   },
   methods: {
     handleJobClick(index) {
