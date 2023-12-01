@@ -1,8 +1,5 @@
 <template>
   <div @click="handleClick" class="container mx-auto flex justify-center items-center gap-8">
-    <button
-      :class="['w-5 rounded-full h-5 hover:bg-orangePrimary', { 'bg-orangePrimary': isSelected }]"
-    ></button>
     <div class="single-job bg-white w-4/5 text-bulePrimary cursor-pointer px-10 py-7 rounded-3xl">
       <div class="flex justify-between">
         <div class="w-1/3">
@@ -56,5 +53,8 @@ export default {
 <style>
 .single-job {
   box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
+}
+.bg-lightOrange {
+  background-color: #4ea832;
 }
 </style>

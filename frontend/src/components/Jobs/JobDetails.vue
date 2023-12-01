@@ -46,9 +46,8 @@
         </li>
       </ul>
     </div>
-    <div class="ml-6 flex justify-center gap-8 mt-8">
-      <!-- <Button class="bg-blue-950" :text="'Apply Now'" /> -->
-      <Button class="w-2/3" :text="'Apply Now'" />
+    <div class="ml-6 flex px-5 justify-start gap-8 mt-8">
+      <Button class="w-full" :text="'Apply Now'" />
     </div>
   </div>
 </template>
