@@ -3,7 +3,7 @@
     <!-- filter left -->
     <div class="flex w-1/2 gap-4">
       <Tags :text="'All'" />
-      <Tags :text="'New'" />
+      <Tags :text="'New'" @click="showNewJobs" />
       <Tags :text="'Featured'" />
       <Tags :text="'SDR'" />
       <Tags :text="'Sofware'" />
@@ -87,10 +87,24 @@
 
 <script>
 import Tags from '@/components/Jobs/Tags.vue'
+import { useJobStore } from '../../stores/JobStore'
 
 export default {
   components: {
     Tags
+  },
+  methods: {
+    showNewJobs() {
+      const jobStore = useJobStore()
+      jobStore.showNewJobs = !jobStore.showNewJobs
+      console.log(jobStore.showNewJobs)
+    }
+  },
+  computed: {
+    jobs() {
+      const jobStore = useJobStore()
+      return jobStore.newJobs
+    }
   }
 }
 </script>

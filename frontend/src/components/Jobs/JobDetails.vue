@@ -8,9 +8,9 @@
         &times;
       </button>
     </div>
-    <div class="mt-10 text-center">
-      <h2 class="font-bold text-2xl mb-1">UI/UX Designer</h2>
-      <h2 class="text-darkerGrey">Addis Ababa, Ethiopia</h2>
+    <div class="mt-5 text-center">
+      <h2 class="font-bold text-2xl mb-1">{{ job.title }}</h2>
+      <h2 class="text-darkerGrey capitalize">{{ job.location }}</h2>
     </div>
     <div class="flex flex-col gap-7">
       <div class="mt-6 flex gap-3 items-center">
@@ -24,13 +24,7 @@
         </svg>
         <h2 class="font-bold text-bluePrimary">Description</h2>
       </div>
-      <p class="text-darkerGrey ml-6">
-        We are looking for a UI/UX Designer to turn our software into easy-to-use products for our
-        clients. UI/UX Designer responsibilities include gathering user requirements, designing
-        graphic elements and building navigation components. To be successful in this role, you
-        should have experience with design software and wireframe tools. If you also have a
-        portfolio of professional design projects that includes work with web/mobile applications,
-      </p>
+      <p class="text-darkerGrey ml-6">{{ job.description }}</p>
       <a href="#" class="ml-6 font-medium text-sm text-orangePrimary">Read More</a>
     </div>
     <div class="flex flex-col gap-5">
@@ -47,24 +41,29 @@
         <h2 class="font-bold text-bluePrimary">Skills and Requirements</h2>
       </div>
       <ul class="text-darkerGrey ml-6 list-disc list-inside">
-        <li>Proven work experience as a UI/UX Designer or similar role</li>
-        <li>Portfolio of design projects</li>
-        <li>Up-to-date knowledge of design software like Adobe Illustrator and Photoshop</li>
-        <li>BSc in Design, Computer Science or relevant field</li>
+        <li v-for="qualifications in job.qualifications" :key="qualifications">
+          {{ qualifications }}
+        </li>
       </ul>
     </div>
-    <div class="ml-6 flex gap-8 mt-8">
-      <Button class="bg-blue-950" :text="'Apply Now'" />
-      <Button :text="'Full Page'" />
+    <div class="ml-6 flex px-5 justify-start gap-8 mt-8">
+      <Button class="w-full" :text="'Apply Now'" />
     </div>
   </div>
 </template>
 
 <script>
 import Button from '../Common/Button.vue'
+
 export default {
   components: {
     Button
+  },
+  props: {
+    job: {
+      type: Object,
+      required: true
+    }
   },
   methods: {
     handleClose() {
