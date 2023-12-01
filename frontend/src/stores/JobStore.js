@@ -5,10 +5,7 @@ import { getJobs } from '../services/JobsService';
 export const useJobStore = defineStore('jobs', () => {
     const jobList = ref([]);
     const showNewJobs = ref(false);
-    const filterTags = {
-        software: false,
-        cvent: false
-    };
+
     async function fetchJobs() {
         const { data } = await getJobs();
         jobList.value = data.records.reverse();
