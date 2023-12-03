@@ -1,7 +1,9 @@
 import { apiClient } from './service';
 
-const getJobs = (params = '') => {
-    return apiClient.get(`/jobs${params}`);
+const getJobs = (params) => {
+    return apiClient.get(`/jobs`, {
+        params: params
+    });
 };
 
 const getJobsById = (id) => {

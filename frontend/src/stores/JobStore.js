@@ -1,24 +1,18 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { getJobs } from '../services/JobsService';
 
 export const useJobStore = defineStore('jobs', () => {
     const jobList = ref([]);
-    const showNewJobs = ref(false);
+    const filterqueries = ref({});
 
-    async function fetchJobs() {
-        const { data } = await getJobs();
-        jobList.value = data.records.reverse();
-        console.log(jobList)
+    async function fetchJobs(param) {
+        const { data } = await getJobs(param);
+        jobList.value = data.records
     }
-    const newJobs = computed(() => {
-        // new Date(Date.now() - 1 * 60 * 60 * 1000);
-        const date1HourAgo = new Date(Date.now() - 1 * 60 * 60 * 1000);
-        return showNewJobs.value ? jobList.value.filter(job => new Date(job.createdAt) > date1HourAgo) : jobList.value;
-    });
-    //   const filterInterviewer = computed(() =>
-    //   schedules.value.filter((user) => user.role == 'Interviewer')
-    //   );
+    const setFilterQueries = (query) => {
+        filterqueries.value = { ...filterqueries.value, ...query };
+    }
+    return { jobList, filterqueries, fetchJobs, setFilterQueries };
 
-    return { jobList, fetchJobs, newJobs, showNewJobs };
 });

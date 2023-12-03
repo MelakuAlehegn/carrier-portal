@@ -1,17 +1,27 @@
 <template>
-  <div class="container flex mx-auto my-7 w-4/5 justify-between items-center">
-    <!-- filter left -->
-    <div class="flex w-1/2 gap-4">
-      <Tags :text="'All'" />
-      <Tags :text="'New'" @click="showNewJobs" />
-      <Tags :text="'Featured'" />
-      <Tags :text="'SDR'" />
-      <Tags :text="'Sofware'" />
-      <Tags :text="'IT'" />
-      <Tags :text="'Cvent'" />
+  <div class="container flex mx-auto my-0 w-4/5 justify-between items-center">
+    <div class="flex gap-2">
+      <div class="flex flex-col gap-2">
+        <p class="text-md text-bluePrimary font-bold">Job Type</p>
+        <Tags :text="'Full-time'" @click="showNewJobs" />
+        <Tags :text="'Part-time'" />
+        <Tags :text="'Internship'" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <p class="text-md text-bluePrimary font-bold">Location</p>
+        <Tags :text="'On-Site'" />
+        <Tags :text="'Remote'" @click="updateFilter('location', 'Remote')" />
+        <Tags :text="'Hybrid'" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <p class="text-md text-bluePrimary font-bold">Experience</p>
+        <Tags :text="'Entry Level'" @click="updateFilter('experience', '0 years')" />
+        <Tags :text="'Mid-Level'" @click="updateFilter('experience', '2 years')" />
+        <Tags :text="'Expert'" @click="updateFilter('experience', '3+ years')" />
+      </div>
     </div>
     <!-- flters right -->
-    <div class="flex gap-8">
+    <!-- <div class="flex gap-8">
       <div class="flex gap-1 cursor-pointer text-[14px] hover:text-orange-300">
         <svg
           data-name="Layer 1"
@@ -81,7 +91,7 @@
         </svg>
         <p class="text-gray-500">Remote</p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -94,16 +104,16 @@ export default {
     Tags
   },
   methods: {
-    showNewJobs() {
+    updateFilter(filterKey, filterValue) {
       const jobStore = useJobStore()
-      jobStore.showNewJobs = !jobStore.showNewJobs
-      console.log(jobStore.showNewJobs)
+      const newFilter = { [filterKey]: filterValue }
+      jobStore.setFilterQueries(newFilter)
     }
   },
   computed: {
-    jobs() {
+    filterqueries() {
       const jobStore = useJobStore()
-      return jobStore.newJobs
+      return jobStore.filterqueries
     }
   }
 }

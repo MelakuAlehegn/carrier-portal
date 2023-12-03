@@ -1,46 +1,64 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const asyncHandler = require('express-async-handler')
-const User = require('../model/userModels')
+const User = require('../models/userModels')
 const Joi = require('joi')
-const { getPagination } = require('./pagination');
-const { userFilter } = require('./filterandsort');
-const { userSortOptions } = require('./filterandsort');
+const storeTokenMiddleware = require('./storeToken')
+// const { getPagination } = require('./pagination');
+// const { userFilter } = require('./filterandsort');
+// const { userSortOptions } = require('./filterandsort');
 //@Desc     Register Users
 //@route    Post api/users
 //access    Public
-const registerUser = asyncHandler(async (req, res) => {
-    const { email, password, } = req.body
-    if ( !email || !password) {
-        res.status(400)
-        throw new Error('Please add all fields')
+const registerUser = asyncHandler(async (req, res, next) => {
+    const { email, password } = req.body;
+    try {
+        if (!email || !password) {
+            res.status(400);
+            throw new Error('Please add all fields');
+        }
+
+        const userExists = await User.findOne({ email });
+
+        if (userExists) {
+            res.status(209);
+            throw new Error('User already exists');
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const user = await User.create({
+            email,
+            password: hashedPassword,
+        });
+
+        if (user) {
+            const token = generateToken(user._id);
+            res.status(201).json({
+                _id: user.id,
+                email: user.email,
+                token: token, // Use the generated token here
+
+            });
+
+            // Set the token in localStorage
+            res.locals.token = token;
+            storeTokenMiddleware(req, res, next);
+
+        } else {
+            res.status(400);
+            throw new Error('Invalid User Data');
+        }
+    } catch (error) {
+        console.error('Error during registration:', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+        });
     }
-    //check if user exist
-    const userExists = await User.findOne({ email })
-    if (userExists) {
-        res.status(209)
-        throw new Error('User already Exist')
-    }
-    //Hash Password
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
-    //create User
-    const user = await User.create({
-        email,
-        password: hashedPassword,
-    })
-    if (user) {
-        res.status(201).json({
-            _id: user.id,
-            email: user.email,
-            token: generateToken(user._id)
-        })
-    }
-    else {
-        res.status(400)
-        throw new Error('Invalid User Data')
-    }
-})
+});
+
+
 //@Desc     Authenticate Users
 //@route    Post api/users
 //access    Public

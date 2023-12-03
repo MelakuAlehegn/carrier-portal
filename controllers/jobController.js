@@ -3,25 +3,25 @@ const asyncHandler = require('express-async-handler')
 const { Job, validateJob } = require('../models/jobsModel')
 
 const getJobs = asyncHandler(async (req, res) => {
-    let { page, limit, title, experience, location, isNew, sortBy } = req.query
+    let { page, limit, sortBy, ...filter } = req.query
     limit = Number(limit) || 10
     page = Number(page) || 1
     const skip = (page - 1) * limit
-    const filter = {}
+    // const filter = {}
     let query;
-    if (title) {
-        filter.title = title
-    }
-    if (experience) {
-        filter.experience = experience
-    }
-    if (location) {
-        filter.location = location
-    }
-    if (isNew) {
-        const date24HoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-        filter.createdAt = { $gt: date24HoursAgo };
-    }
+    // if (title) {
+    //     filter.title = title
+    // }
+    // if (experience) {
+    //     filter.experience = experience
+    // }
+    // if (location) {
+    //     filter.location = location
+    // }
+    // if (isNew) {
+    //     const date24HoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    //     filter.createdAt = { $gt: date24HoursAgo };
+    // }
     query = await Job.find(filter).skip(skip).limit(Number(limit))
     let totalJobs = await Job.countDocuments(filter);
     const totalPages = Math.ceil(totalJobs / Number(limit))
