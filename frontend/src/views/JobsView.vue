@@ -7,7 +7,7 @@
       <button @click="toggleFilter" class="cursor-pointer font-medium">
         {{ showFilter ? 'Close Filter' : 'Filter Jobs' }}
       </button>
-      <button class="cursor-pointer">Clear All</button>
+      <button v-if="showFilter" class="cursor-pointer">Clear All</button>
     </div>
     <div v-if="showFilter" class="container mx-auto flex justify-center items-center my-2">
       <div
