@@ -9,7 +9,7 @@
       </button>
       <button v-if="showFilter" class="cursor-pointer">Clear All</button>
     </div>
-    <div v-if="showFilter" class="container mx-auto flex justify-center items-center my-2">
+    <div v-if="showFilter" class="container mt-7 mx-auto flex justify-center items-center my-2">
       <div
         class="single-job flex items-start bg-white w-4/5 text-bulePrimary cursor-pointer my-3 px-10 py-6 rounded-3xl"
       >
