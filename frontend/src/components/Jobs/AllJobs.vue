@@ -40,15 +40,18 @@ export default {
       jobs: {}
     }
   },
-  async created() {
+  async mounted() {
     const jobStore = useJobStore()
-    await jobStore.fetchJobs()
-  },
-  computed: {
-    jobs() {
-      const jobStore = useJobStore()
-      return jobStore.newJobs
-    }
+    await jobStore.fetchJobs(jobStore.filterqueries)
+    this.jobs = jobStore.jobList
+
+    this.$watch(
+      () => jobStore.filterqueries,
+      async (newFilterQueries) => {
+        await jobStore.fetchJobs(newFilterQueries)
+        this.jobs = jobStore.jobList
+      }
+    )
   },
   methods: {
     handleJobClick(index) {

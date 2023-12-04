@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div>
     <div class="bg-[url('../assets/MMCY-Tech-Job_section-1.png')] md:bg-left-top bg-center">
     <!-- Banner header -->
@@ -67,3 +68,14 @@ export default {
 };
 </script>
   
+=======
+  <Login />
+</template>
+
+<script setup>
+import Login from '../components/Auth/Login.vue'
+</script>
+
+<style>
+</style>
+>>>>>>> filter-jobs-frontend

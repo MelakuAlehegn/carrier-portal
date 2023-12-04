@@ -18,22 +18,22 @@ const userSchema = mongoose.Schema({
         enum: ['candidate', 'employee', 'admin', 'superadmin'],
         default: 'candidate'
     },
-    status:{
+    status: {
         type: String,
     },
-    phone_number:{
+    phone_number: {
         type: Number,
     },
-    photo:{
+    photo: {
         type: String,
     },
-    attachments:{
+    attachments: {
         type: String,
     },
-    department:{
+    department: {
         type: String,
     },
-    bio:{
+    bio: {
         type: String,
     },
     verified: {

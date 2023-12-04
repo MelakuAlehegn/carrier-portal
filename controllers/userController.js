@@ -2,40 +2,11 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const asyncHandler = require('express-async-handler')
 const path = require('path');
-const User = require('../models/userModels')
+const User = require('../modelss/userModels')
 const userVerification = require('../models/userVerification')
 const nodemailer = require('nodemailer')
-const {v4: uuidv4} = require('uuid')
+const { v4: uuidv4 } = require('uuid')
 const Joi = require('joi')
-const storeTokenMiddleware = require('./storeToken');
-const { error } = require('console');
-require('dotenv').config()
-// const { getPagination } = require('./pagination');
-// const { userFilter } = require('./filterandsort');
-// const { userSortOptions } = require('./filterandsort');
-
-//path for static verified page
-// const path = require(path)
-
-//nodemailer stuff
-let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.AUTH_EMAIL,
-        pass: process.env.AUTH_PASS,
-    }
-})
-
-//testing transport
-transporter.verify((error, sucess) => {
-    if(error) {
-        console.log(error);
-    } else {
-        console.log("Ready for messages");
-        console.log(sucess);
-    }
-})
-
 
 //@Desc     Register Users
 //@route    Post api/users
@@ -47,23 +18,23 @@ const registerUser = asyncHandler(async (req, res, next) => {
             res.status(400);
             throw new Error('Please add all fields');
         }
- 
+
         const userExists = await User.findOne({ email });
- 
+
         if (userExists) {
             res.status(209);
             throw new error('User already exists');
         }
- 
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
- 
+
         const user = await User.create({
             email,
             password: hashedPassword,
             verified: false,
         });
- 
+
         if (user) {
             const token = generateToken(user._id);
 
@@ -74,13 +45,13 @@ const registerUser = asyncHandler(async (req, res, next) => {
                 token: token, // Use the generated token here
                 status: "PENDING",
                 message: "verification email sent"
- 
+
             });
- 
+
             // Set the token in localStorage
             res.locals.token = token;
             storeTokenMiddleware(req, res, next);
- 
+
         } else {
             res.status(400);
             throw new error('Invalid User Data');
@@ -97,99 +68,99 @@ const registerUser = asyncHandler(async (req, res, next) => {
 //@route    get api/users/userid/uniqueString
 //access    Public
 const verifyEmail = asyncHandler(async (req, res) => {
-    const {userId, uniqueString} = req.params;
+    const { userId, uniqueString } = req.params;
 
     userVerification
-    .find({userId})
-    .then((result) => {
-        if(result.length > 0) {
-            //user verification record exists so we proceed 
-            const {expiresAt} = result[0]
+        .find({ userId })
+        .then((result) => {
+            if (result.length > 0) {
+                //user verification record exists so we proceed 
+                const { expiresAt } = result[0]
 
-            const hashedUniqueString = result[0].uniqueString
-            //check if the code expires
-            if(expiresAt < Date.now()){
-                //record has expired
-                userVerification
-                .deleteOne({userId})
-                .then(result => {
-                    User
-                    .deleteOne({_id: userId})
-                    .then(() => {
-                        res.json({
-                            message: "Link has expired. Please signup again",
-                        })                       
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                        res.json({
-                            message: "Clearing user with expired unique string failed",
-                        })
-                    })
-                })
-                .catch((error) => {
-                    console.log(error)
-                    res.json({
-                        message: "An error occurred while clearing expired user verification record",
-                    })
-                })
-            } else {
-                //valid record exists so we validate the unique strings
-                //compare the unique strings
-                bcrypt
-                .compare(uniqueString, hashedUniqueString)
-                .then(result => {
-                    if (result){
-                        //string matches 
-                        User
-                        .updateOne({_id: userId}, {verified: true})
-                        .then(() => {
-                            userVerification
-                            .deleteOne({userId})
-                            .then(() => {
-                                res.sendFile(path.join(__dirname, "./../frontend/src/views/HomeView.vue"))
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                                res.json({
-                                    message: "An error occurred while finalizing successful verification "
+                const hashedUniqueString = result[0].uniqueString
+                //check if the code expires
+                if (expiresAt < Date.now()) {
+                    //record has expired
+                    userVerification
+                        .deleteOne({ userId })
+                        .then(result => {
+                            User
+                                .deleteOne({ _id: userId })
+                                .then(() => {
+                                    res.json({
+                                        message: "Link has expired. Please signup again",
+                                    })
                                 })
-                            })
+                                .catch((error) => {
+                                    console.log(error)
+                                    res.json({
+                                        message: "Clearing user with expired unique string failed",
+                                    })
+                                })
                         })
                         .catch((error) => {
                             console.log(error)
                             res.json({
-                                message: "An error occurred while updating user record to show verified"
+                                message: "An error occurred while clearing expired user verification record",
                             })
                         })
-                    }else {
-                        //existing record but incorrect verification details
-                        res.json({
-                            message: "Invalid verification details"
-                        }) 
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                    res.json({
-                        message: "An error occurred while comparing unique strings."
-                    })
-                })
+                } else {
+                    //valid record exists so we validate the unique strings
+                    //compare the unique strings
+                    bcrypt
+                        .compare(uniqueString, hashedUniqueString)
+                        .then(result => {
+                            if (result) {
+                                //string matches 
+                                User
+                                    .updateOne({ _id: userId }, { verified: true })
+                                    .then(() => {
+                                        userVerification
+                                            .deleteOne({ userId })
+                                            .then(() => {
+                                                res.sendFile(path.join(__dirname, "./../frontend/src/views/HomeView.vue"))
+                                            })
+                                            .catch((error) => {
+                                                console.log(error)
+                                                res.json({
+                                                    message: "An error occurred while finalizing successful verification "
+                                                })
+                                            })
+                                    })
+                                    .catch((error) => {
+                                        console.log(error)
+                                        res.json({
+                                            message: "An error occurred while updating user record to show verified"
+                                        })
+                                    })
+                            } else {
+                                //existing record but incorrect verification details
+                                res.json({
+                                    message: "Invalid verification details"
+                                })
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                            res.json({
+                                message: "An error occurred while comparing unique strings."
+                            })
+                        })
 
+                }
+            } else {
+                //user verification doesn't exist
+                res.json({
+                    message: "Account record doesn't exist or has been verified already. Please Signup or Login.",
+                })
             }
-        } else {
-            //user verification doesn't exist
-            res.json({
-                message: "Account record doesn't exist or has been verified already. Please Signup or Login.",
-            })
-        }
-    })
-    .catch((error) => {
-        console.log(error);
-        res.json({
-            message: "An error occurred while checking for existing user verification record",
         })
-    })
+        .catch((error) => {
+            console.log(error);
+            res.json({
+                message: "An error occurred while checking for existing user verification record",
+            })
+        })
 })
 
 
@@ -200,7 +171,7 @@ const verifyPage = asyncHandler(async (req, res) => {
 })
 
 
- 
+
 //@Desc     Authenticate Users
 //@route    Post api/users
 //access    Public
@@ -209,22 +180,22 @@ const loginUser = asyncHandler(async (req, res) => {
     //check for user email
     const user = await User.findOne({ email })
     if (user && (await bcrypt.compare(password, user.password))) {
-        if (user.verified){
-        res.json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            verified: user.verified,
-            token: generateToken(user._id)
-        })
-    }else {
-        res.json({
-            status: "FAILED",
-            message: "Email hasn't been verified yet. Check your inbox!"
-        })
-    }
-} else {
+        if (user.verified) {
+            res.json({
+                _id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                verified: user.verified,
+                token: generateToken(user._id)
+            })
+        } else {
+            res.json({
+                status: "FAILED",
+                message: "Email hasn't been verified yet. Check your inbox!"
+            })
+        }
+    } else {
         res.status(400)
         throw new Error('Invalid Credential')
     }
@@ -335,7 +306,7 @@ const generateToken = (id) => {
 }
 
 //verfication email function
-const sendVerificationEmail = ({_id, email}, res) => {
+const sendVerificationEmail = ({ _id, email }, res) => {
     //url to be used in email
     const currentUrl = "http://localhost:3000/api/"
 
@@ -346,7 +317,7 @@ const sendVerificationEmail = ({_id, email}, res) => {
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: "Registration Confirmation",
-        html:`<p>Hello</p> <p>Thank you for registering at MMCYTech Talent.</p> 
+        html: `<p>Hello</p> <p>Thank you for registering at MMCYTech Talent.</p> 
         <p><b>Please note</b> - you must complete this last step to become a registered member. Click the link below to activate your account.</P>
         <p>This link expires in 24 hours</P> <p>Press <a href=${currentUrl + "users/verify/" + _id + "/" + uniqueString}>here</a> to proceed.</p>`,
     };
@@ -354,50 +325,50 @@ const sendVerificationEmail = ({_id, email}, res) => {
     //hash  the unique string
     const saltrounds = 10;
     bcrypt
-    .hash(uniqueString, saltrounds)
-    .then((hashedUniqueString) => {
-        //set values in userVerification collection
-        const newVerification = new userVerification({
-            userId: _id,
-            uniqueString: hashedUniqueString,
-            createdAt: Date.now(),
-            expiresAt: Date.now() + 86400000,
-        });
+        .hash(uniqueString, saltrounds)
+        .then((hashedUniqueString) => {
+            //set values in userVerification collection
+            const newVerification = new userVerification({
+                userId: _id,
+                uniqueString: hashedUniqueString,
+                createdAt: Date.now(),
+                expiresAt: Date.now() + 86400000,
+            });
 
-        newVerification
-        .save()
-        .then(() => {
-            transporter
-            .sendMail(mailOptions)
-            .then(() => {
-                //email sent and verification record saved
-                res.json({
-                    status: "PENDING",
-                    message: "Verification email sent",
+            newVerification
+                .save()
+                .then(() => {
+                    transporter
+                        .sendMail(mailOptions)
+                        .then(() => {
+                            //email sent and verification record saved
+                            res.json({
+                                status: "PENDING",
+                                message: "Verification email sent",
+                            })
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            res.json({
+                                status: "FAILED",
+                                message: "Couldn't send verification email!",
+                            })
+                        })
                 })
-            })
-            .catch((error) => {
-                console.log(error);
-                res.json({
-                    status: "FAILED",
-                    message: "Couldn't send verification email!",
+                .catch((error) => {
+                    console.log(error);
+                    res.json({
+                        status: "FAILED",
+                        message: "Couldn't save verification email data!",
+                    })
                 })
-            })
         })
-        .catch((error) => {
-            console.log(error);
+        .catch(() => {
             res.json({
                 status: "FAILED",
-                message: "Couldn't save verification email data!",
-            })
+                message: "An Error occurred while hashing email data",
+            });
         })
-    })
-    .catch(() => {
-        res.json({
-            status: "FAILED",
-            message: "An Error occurred while hashing email data",
-        });
-    })
 }
 
 

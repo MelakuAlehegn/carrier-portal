@@ -3,7 +3,8 @@
     <div class="flex container mx-auto w-4/5 justify-between items-center py-5">
       <div class="flex items-center gap-20">
         <img src="../../assets/MMCYTech.png" alt="mmcy logo" class="cursor-pointer h-9" />
-        <div class="pt-2 relative">
+        <!-- Search bar -->
+        <!-- <div class="pt-2 relative">
           <input
             class="bg-veryLightGrey h-10 px-5 pr-12 w-80 rounded-xl text-sm mb-2 focus:outline-none"
             type="search"
@@ -30,11 +31,13 @@
               />
             </svg>
           </button>
-        </div>
+        </div> -->
       </div>
-      <div class="flex gap-3">
-        <Button :text="'Login'" />
-        <Button :text="'Register'" />
+      <div class="flex gap-5 items-center">
+        <router-link to="/">Home</router-link>
+        <router-link to="/jobs">Jobs</router-link>
+        <Button :text="'Login'" to="/login" />
+        <Button :text="'Register'" to="/register" />
       </div>
     </div>
   </div>
@@ -42,6 +45,7 @@
 
 <script setup>
 import Button from '../Common/Button.vue'
+import { RouterLink } from 'vue-router'
 </script>
 
 <style>

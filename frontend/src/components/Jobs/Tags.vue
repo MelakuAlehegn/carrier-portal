@@ -1,13 +1,14 @@
 <template>
-  <p
-    :class="[
-      'text-bluePrimary cursor-pointer hover:bg-orange-300 transition-colors duration-300 hover:text-white text-sm bg-white text-center px-5 py-1 rounded-2xl',
-      { 'bg-orange-300 text-white': isClicked }
-    ]"
-    @click="handleClick"
-  >
-    {{ text }}
-  </p>
+  <label :class="['flex items-center cursor-pointer']">
+    <input type="checkbox" v-model="isClicked" class="hidden" />
+    <span
+      :class="[
+        'text-bluePrimary hover:bg-veryLightOrange transition-colors duration-300 text-sm bg-lightGrey text-center px-5 py-1 rounded-2xl'
+      ]"
+    >
+      {{ text }}
+    </span>
+  </label>
 </template>
 <script>
 export default {

@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <div class="bg-lightGrey pb-0 md:pb-4">
     <div class="bg-[url('../assets/MMCY-Tech-Job_section-1.png')] md:bg-left-top bg-center">
     <!-- Banner header -->
@@ -139,3 +140,14 @@ export default {
   };
   </script> -->
   
+=======
+  <Register />
+</template>
+
+<script setup>
+import Register from '../components/Auth/Register.vue'
+</script>
+
+<style>
+</style>
+>>>>>>> filter-jobs-frontend

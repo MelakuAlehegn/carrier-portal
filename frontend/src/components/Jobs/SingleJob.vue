@@ -5,6 +5,7 @@
         <div class="w-1/3">
           <h2 class="text-bluePrimary capitalize font-bold text-lg">{{ job.title }}</h2>
           <p class="text-gray-400 capitalize text-sm">{{ job.contract }}</p>
+          <p class="text-gray-400 capitalize text-sm">{{ job.experience }}</p>
         </div>
         <div class="w-1/3 flex justify-center">
           <div>
