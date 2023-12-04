@@ -10,6 +10,10 @@ connectDB()
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use('/api/jobs', jobRoutes)
+// app.use('/api/jobs', jobRoutes)
+
+app.get('/api/jobs', (req, res) => {
+    res.send('Get Jobs')
+})
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
