@@ -5,10 +5,6 @@
     <header class=" text-white text-center py-8 h-full space-y-4 justify-items-end">
       <div class="px-4 py-40 md:pt-40 md:pl-30 md:pb-24 md:pr-4 ">
         <h1 class="md:text-[80px] text-[50px] font-bold">Login</h1>
-        <!-- <p class="text-xl mb-4 pt-2">Take your Career to New Heights</p>
-        <button class="bg-orangePrimary text-white md:text-[20px] text-[30px] font-bold font-poppins py-4 px-6 hover:bg-opacity-90 transition duration-300">
-          Join us
-        </button> -->
       </div>
     </header>
 </div>
@@ -39,55 +35,35 @@
   </template>
 
 <script>
+import { apiClient } from '../services/service';
+
+
 export default {
   data() {
     return {
+      email: '',
       password: '',
-      showPassword: false
+      showPassword: false,
+      errorMessage: '', // Include errorMessage to display login errors
     };
-  }
-  // Your other component code
+  },
+  methods: {
+    async loginUser() {
+      try {
+        const response = await apiClient.post('http://localhost:3000/api/users/login', {
+          email: this.email,
+          password: this.password,
+        });
+
+        console.log(response.data); // Log the response or perform actions as needed
+
+      } catch (error) {
+        console.error('Login failed:', error.response.data);
+        // Handle the login error here
+        this.errorMessage = error.response.data.message; // Set the error message
+      }
+    },
+  },
 };
 </script>
   
-  <!-- <script>
-  import { authStore } from '@/store/auth';
-  //import ErrorModal from '@/components/ErrorModal.vue';
-  
-  export default {
-    components: {
-      ErrorModal
-    },
-    data() {
-      return {
-        email: '',
-        password: '',
-        isErrorModalVisible: false,
-        errorMessage: ''
-      };
-    },
-    methods: {
-      async loginUser() {
-        try {
-          const store = authStore(); 
-          await store.login(this.email, this.password);
-        if (store.isAuthenticated) {
-            this.$router.push({ name: 'JobsList' });
-            console.log('Login successful');
-          } else  {
-            this.errorMessage = 'Login failed. Please check your credentials.';
-            this.isErrorModalVisible = true;
-            console.error('Error occurred:', this.errorMessage);
-          }
-        } catch (error) {
-          console.error('Error occurred:', error);
-          this.errorMessage = 'An error occurred while processing your request.';
-          this.isErrorModalVisible = true;
-        }
-      },
-      closeErrorModal() {
-        this.isErrorModalVisible = false;
-      }
-    }
-  };
-  </script> -->

@@ -1,10 +1,7 @@
 const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
-    firstName: {
-        type: String,
-    },
-    lastName: {
+    fullName: {
         type: String,
     },
     email: {
@@ -28,16 +25,19 @@ const userSchema = mongoose.Schema({
         type: Number,
     },
     photo:{
-        type: URL,
+        type: String,
     },
     attachments:{
-        type: URL,
+        type: String,
     },
     department:{
         type: String,
     },
     bio:{
         type: String,
+    },
+    verified: {
+        type: Boolean,
     }
 },
     {
