@@ -2,7 +2,7 @@
   <main class="">
     <!-- filters section -->
     <div
-      class="flex container mx-auto text-sm justify-between px-3 py-2 rounded-lg mt-4 bg-white w-2/12"
+      class="flex container mt-56 mx-auto text-sm justify-between px-3 py-2 rounded-lg bg-white w-2/12"
     >
       <button @click="toggleFilter" class="cursor-pointer font-medium">
         {{ showFilter ? 'Close Filter' : 'Filter Jobs' }}

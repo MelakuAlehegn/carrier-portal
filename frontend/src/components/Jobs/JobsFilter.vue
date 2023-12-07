@@ -3,27 +3,75 @@
     <div class="flex gap-4 justify-between">
       <div class="flex flex-col gap-2">
         <p class="text-md text-bluePrimary font-bold">Job Type</p>
-        <Tags :text="'Full-time'" @click="updateFilter('contract', 'fulltime')" />
-        <Tags :text="'Part-time'" @click="updateFilter('contract', 'partime')" />
-        <Tags :text="'Short-term'" @click="updateFilter('contract', 'intrim')" />
+        <Tags
+          :text="'Full-time'"
+          :selected="filterqueries.contract === 'fulltime'"
+          @click="updateFilter('contract', 'fulltime')"
+        />
+        <Tags
+          :text="'Part-time'"
+          :selected="filterqueries.contract === 'partime'"
+          @click="updateFilter('contract', 'partime')"
+        />
+        <Tags
+          :text="'Short-term'"
+          :selected="filterqueries.contract === 'intrim'"
+          @click="updateFilter('contract', 'intrim')"
+        />
       </div>
       <div class="flex flex-col gap-2">
         <p class="text-md text-bluePrimary font-bold">Location</p>
-        <Tags :text="'On-Site'" @click="updateFilter('location', 'onsite')" />
-        <Tags :text="'Remote'" @click="updateFilter('location', 'remote')" />
-        <Tags :text="'Hybrid'" @click="updateFilter('location', 'hybrid')" />
+        <Tags
+          :text="'On-Site'"
+          :selected="filterqueries.location === 'onsite'"
+          @click="updateFilter('location', 'onsite')"
+        />
+        <Tags
+          :text="'Remote'"
+          :selected="filterqueries.location === 'remote'"
+          @click="updateFilter('location', 'remote')"
+        />
+        <Tags
+          :text="'Hybrid'"
+          :selected="filterqueries.location === 'hybrid'"
+          @click="updateFilter('location', 'hybrid')"
+        />
       </div>
       <div class="flex flex-col gap-2">
         <p class="text-md text-bluePrimary font-bold">Experience</p>
-        <Tags :text="'Entry Level'" @click="updateFilter('experience', '0 years')" />
-        <Tags :text="'Mid-Level'" @click="updateFilter('experience', '2 years')" />
-        <Tags :text="'Expert'" @click="updateFilter('experience', '3+ years')" />
+        <Tags
+          :text="'Entry Level'"
+          :selected="filterqueries.experience === '0 years'"
+          @click="updateFilter('experience', '0 years')"
+        />
+        <Tags
+          :text="'Mid-Level'"
+          :selected="filterqueries.experience === '2 years'"
+          @click="updateFilter('experience', '2 years')"
+        />
+        <Tags
+          :text="'Expert'"
+          :selected="filterqueries.experience === '3+ years'"
+          @click="updateFilter('experience', '3+ years')"
+        />
       </div>
       <div class="flex flex-col gap-2">
         <p class="text-md text-bluePrimary font-bold">Category</p>
-        <Tags :text="'Representatives'" @click="updateFilter('department', 'Representatives')" />
-        <Tags :text="'Software'" @click="updateFilter('department', 'software')" />
-        <Tags :text="'Support'" @click="updateFilter('department', 'support')" />
+        <Tags
+          :text="'Representatives'"
+          :selected="filterqueries.department === 'Representatives'"
+          @click="updateFilter('department', 'Representatives')"
+        />
+        <Tags
+          :text="'Software'"
+          :selected="filterqueries.department === 'software'"
+          @click="updateFilter('department', 'software')"
+        />
+        <Tags
+          :text="'Support'"
+          :selected="filterqueries.department === 'support'"
+          @click="updateFilter('department', 'support')"
+        />
       </div>
     </div>
   </div>

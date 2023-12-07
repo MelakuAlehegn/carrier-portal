@@ -1,29 +1,40 @@
 <template>
   <label :class="['flex items-center cursor-pointer']">
-    <input type="checkbox" v-model="isClicked" class="hidden" />
+    <input type="checkbox" @click="handleClick" class="hidden" />
     <span
       :class="[
-        'text-bluePrimary hover:bg-veryLightOrange transition-colors duration-300 text-sm bg-lightGrey text-center px-5 py-1 rounded-2xl'
+        'text-bluePrimary hover:bg-veryLightOrange transition-colors duration-300 text-sm bg-lightGrey text-center px-5 py-1 rounded-2xl',
+        { 'bg-orange-300 text-white': isSelected }
       ]"
     >
       {{ text }}
     </span>
   </label>
 </template>
+
 <script>
 export default {
-  props: ['text'],
+  props: ['text', 'selected'],
   data() {
     return {
-      isClicked: false
+      isSelected: false
     }
   },
   methods: {
     handleClick() {
-      this.isClicked = !this.isClicked
+      this.$emit('click')
+    }
+  },
+  watch: {
+    selected: {
+      immediate: true,
+      handler(newValue) {
+        this.isSelected = newValue
+      }
     }
   }
 }
 </script>
+
 <style>
 </style>
