@@ -7,6 +7,7 @@
       }"
       class="flex flex-col gap-5 py-3 transform origin-left"
     >
+      <Pagination />
       <SingleJob
         v-for="(job, index) in jobs"
         :key="job._id"
@@ -27,11 +28,13 @@
 import JobDetails from './JobDetails.vue'
 import SingleJob from './SingleJob.vue'
 import { useJobStore } from '../../stores/JobStore'
+import Pagination from './Pagination.vue'
 
 export default {
   components: {
     SingleJob,
-    JobDetails
+    JobDetails,
+    Pagination
   },
   data() {
     return {
