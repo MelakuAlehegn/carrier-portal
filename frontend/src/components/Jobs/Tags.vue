@@ -3,8 +3,8 @@
     <input type="checkbox" @click="handleClick" class="hidden" />
     <span
       :class="[
-        'text-bluePrimary hover:bg-veryLightOrange transition-colors duration-300 text-sm bg-lightGrey text-center px-5 py-1 rounded-2xl',
-        { 'bg-orange-300 text-white': isSelected }
+        'text-bluePrimary hover:bg-orange-300 transition-colors duration-300 text-sm bg-lightGrey text-center px-5 py-1 rounded-2xl',
+        { 'bg-orange-300 ': isSelected }
       ]"
     >
       {{ text }}

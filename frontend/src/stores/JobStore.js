@@ -13,7 +13,10 @@ export const useJobStore = defineStore('jobs', () => {
     const setFilterQueries = (query) => {
         filterqueries.value = { ...filterqueries.value, ...query };
     }
+    const clearFilters = () => {
+        filterqueries.value = {};
+    }
 
-    return { jobList, filterqueries, fetchJobs, setFilterQueries };
+    return { jobList, filterqueries, fetchJobs, setFilterQueries, clearFilters };
 
 });

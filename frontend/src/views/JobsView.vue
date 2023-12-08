@@ -7,7 +7,7 @@
       <button @click="toggleFilter" class="cursor-pointer font-medium">
         {{ showFilter ? 'Close Filter' : 'Filter Jobs' }}
       </button>
-      <button v-if="showFilter" class="cursor-pointer">Clear All</button>
+      <button v-if="showFilter" @click="clearAllFilters" class="cursor-pointer">Clear All</button>
     </div>
     <div v-if="showFilter" class="container mt-7 mx-auto flex justify-center items-center my-2">
       <div
@@ -24,6 +24,7 @@
 <script>
 import JobsFilter from '@/components/Jobs/JobsFilter.vue'
 import AllJobs from '@/components/Jobs/AllJobs.vue'
+import { useJobStore } from '../stores/JobStore'
 
 export default {
   components: {
@@ -38,6 +39,10 @@ export default {
   methods: {
     toggleFilter() {
       this.showFilter = !this.showFilter
+    },
+    clearAllFilters() {
+      const jobStore = useJobStore()
+      jobStore.clearFilters()
     }
   }
 }
