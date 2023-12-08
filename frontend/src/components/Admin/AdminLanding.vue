@@ -22,7 +22,7 @@
           <input v-model="editJobData.qualifications" type="text" id="jobQualifications" class="w-full px-3 py-2 border border-gray-300 rounded mb-4">
 
           <label for="jobCreatedBy" class="block mb-2">Created By:</label>
-          <input v-model="editJobData.createdBy" type="text" id="jobCreatedBy" class="w-full px-3 py-2 border border-gray-300 rounded mb-4">
+<input v-model="editJobData.createdBy" type="text" id="jobCreatedBy" class="w-full px-3 py-2 border border-gray-300 rounded mb-4" disabled>
 
           <label for="jobDepartment" class="block mb-2">Department:</label>
           <input v-model="editJobData.department" type="text" id="jobDepartment" class="w-full px-3 py-2 border border-gray-300 rounded mb-4">
@@ -55,27 +55,34 @@
 
     <div class="relative" :class="{ 'blur': showEditForm }">
       <table class="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th class="py-3 px-4 font-semibold text-left">Job ID</th>
-            <th class="py-3 px-4 font-semibold text-left">Title</th>
-            <th class="py-3 px-4 font-semibold text-left">Skill</th>
-            <th class="py-3 px-4 font-semibold text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="job in jobs" :key="job._id">
-            <td class="py-3 px-4">{{ job._id }}</td>
-            <td class="py-3 px-4">{{ job.title }}</td>
-            <td class="py-3 px-4">{{ job.skills }}</td>
-            <td class="py-3 px-4">
-              <button class="px-2 py-1 bg-blue-500 text-white rounded-md mr-2" @click="editJob(job._id)">Edit</button>
-              <button class="px-2 py-1 bg-red-500 text-white rounded-md" @click="confirmDelete(job._id)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <thead>
+    <tr>
+      <th class="py-3 px-4 font-semibold text-left bg-blue-500 text-white">Job ID</th>
+      <th class="py-3 px-4 font-semibold text-left bg-blue-500 text-white">Title</th>
+      <th class="py-3 px-4 font-semibold text-left bg-blue-500 text-white">Created By</th>
+      <th class="py-3 px-4 font-semibold text-left bg-blue-500 text-white">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="job in jobs" :key="job._id" class="border-b hover:bg-gray-100">
+      <td class="py-3 px-4 border-l">{{ job._id }}</td>
+      <td class="py-3 px-4 border-l">{{ job.title }}</td>
+      <td class="py-3 px-4 border-l">{{ job.createdBy }}</td>
+
+      <td class="py-3 px-4 border-l">
+        <button class="px-4 py-2 bg-blue-500 text-white rounded-md mr-2 hover:bg-blue-600 transition-colors" @click="editJob(job._id)">Edit</button>
+        <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors" @click="confirmDelete(job._id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
     </div>
+    <!-- Pagination links -->
+<div class="flex justify-center mt-4">
+  <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md mr-2" :disabled="currentPage === 1" @click="fetchJobsByPage(currentPage - 1)">Previous</button>
+  <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md mr-2" v-for="page in totalPages" :key="page" :class="{ 'bg-blue-500 text-white': currentPage === page }" @click="fetchJobsByPage(page)">{{ page }}</button>
+  <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md" :disabled="currentPage === totalPages" @click="fetchJobsByPage(currentPage + 1)">Next</button>
+</div>
   </div>
 </template>
 
@@ -103,6 +110,8 @@ export default {
       salary: '',
     },
     jobToDelete: null,
+    totalPages: 0,
+    currentPage: 1,
   };
 },
   mounted() {
@@ -159,6 +168,16 @@ export default {
         this.jobToDelete = null;
       } catch (error) {
         console.error(`Error deleting job with ID ${this.jobToDelete}:`, error);
+      }
+    },
+    async fetchJobsByPage(page) {
+      this.currentPage = page;
+      try {
+        const response = await axios.get(`http://localhost:3000/api/jobs?page=${page}`);
+        this.jobs = response.data.records;
+        this.totalPages = response.data.pages;
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
       }
     },
   },

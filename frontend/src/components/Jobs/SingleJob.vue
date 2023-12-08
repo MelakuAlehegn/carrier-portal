@@ -38,11 +38,12 @@ export default {
   props: {
     selected: Boolean,
     jobId: Number,
-    job: Object
+    job: Object,
+    department: String
   },
   methods: {
     handleClick() {
-      this.$emit('jobClick', this.jobId)
+      this.$emit('jobClick', this.jobId, this.job.department)
     },
     fromNow(date) {
       return dayjs(date).fromNow()

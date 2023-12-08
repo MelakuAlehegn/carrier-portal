@@ -47,7 +47,9 @@
       </ul>
     </div>
     <div class="ml-6 flex px-5 justify-start gap-8 mt-8">
-      <Button class="w-full" :text="'Apply Now'" />
+      <router-link :to="{ name: 'GeneralForm' }" class="w-full">
+        <Button :text="'Apply Now'" />
+      </router-link>
     </div>
   </div>
 </template>

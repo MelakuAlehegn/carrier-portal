@@ -1,6 +1,6 @@
 <template>
     <div class="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-black bg-opacity-50 overflow-scroll py-[700px]">
-      <div class="bg-white p-6 rounded shadow w-[700px]">
+      <div class="bg-white p-6 rounded shadow ">
         <h2 class="text-xl font-bold mb-4">Edit Job</h2>
         <form @submit.prevent="updateJob">
           <!-- Form fields -->

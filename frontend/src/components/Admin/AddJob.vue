@@ -1,6 +1,6 @@
 <template>
     <div class="bg-lightGrey min-h-screen flex items-center justify-center py-5">
-      <div class="bg-white p-8 rounded shadow-lg max-w-md">
+      <div class="bg-white p-8 rounded w-full mx-40 my-40 border border-orange-600 shadow-xl">
         <h2 class="text-2xl font-bold mb-4">Add Job</h2>
         <form @submit.prevent="submitJob">
           <div class="mb-4">

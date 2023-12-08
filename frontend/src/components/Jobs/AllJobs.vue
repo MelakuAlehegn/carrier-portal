@@ -57,6 +57,7 @@ export default {
     handleJobClick(index) {
       this.jobClicked = true
       this.selectedJob = index
+      console.log('Clicked job department:', this.selectedJob)
     },
     handleCloseDetails() {
       this.jobClicked = false
