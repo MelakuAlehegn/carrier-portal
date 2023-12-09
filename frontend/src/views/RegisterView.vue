@@ -69,7 +69,7 @@
         </span>
       </div>
       <!--Error Message-->
-      <div v-if="showErrorMessage" class="text-red text-left text-[16px] py-2">
+      <div v-if="showErrorMessage" class="text-red-600 text-[16px] py-2">
         {{ errorMessage }}
       </div>
       <!--Button-->
@@ -102,7 +102,8 @@ export default {
   },
   methods: {
     async registerUser() {
-      try {
+      if(this.password === this.confirmPassword){
+        try {
         const response = await apiClient.post('/users', {
           email: this.email,
           password: this.password
@@ -114,6 +115,7 @@ export default {
         // Clear the form after successful registration
         this.email = ''
         this.password = ''
+        this.confirmPassword = ''
 
         // Redirect the user to a success page or perform any other action
       } catch (error) {
@@ -123,6 +125,11 @@ export default {
         this.showSuccessMessage = false
         this.showErrorMessage = true // Show error message on failure
         this.errorMessage = error.response.data.message
+      }
+      } else {
+        this.showSuccessMessage = false
+        this.showErrorMessage = true
+        this.errorMessage = 'Please check your password'
       }
     },
     togglePasswordVisibility() {

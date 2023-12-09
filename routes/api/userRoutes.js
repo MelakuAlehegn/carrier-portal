@@ -8,10 +8,10 @@ router.post('/login', loginUser)
 router.get("/verify/:userId/:uniqueString", verifyEmail)
 router.get("/verified", verifyPage)
 router.get('/me', protect, getMe)
-router.get('/', protect, getAllUser)
+router.get('/allusers', protect, getAllUser)
 router.put('/:id', protect, updateUser)
 router.post('/addadmin', protect, addAdmin)
-router.delete('/:id', protect, deleteUser)
+router.delete('/:id',  deleteUser)
 
 
 module.exports = router

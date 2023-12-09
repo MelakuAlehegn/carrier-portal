@@ -31,7 +31,8 @@
               :class="{ 'text-bluePrimary': scrolled }"
               >Jobs</a
             >
-            <a
+            <div v-if="!isLoggedIn" class="space-x-8"> 
+              <a
               href="/login"
               class="bg-orangePrimary py-2 px-4"
               :class="{ 'bg-orangePrimary': scrolled, 'text-white': scrolled }"
@@ -43,6 +44,19 @@
               :class="{ 'bg-orangePrimary': scrolled, 'text-white': scrolled }"
               >Register</a
             >
+            </div>
+            <div v-else class="space-x-8">
+            <a 
+            href="/my-account"
+            class="bg-orangePrimary py-2 px-4"
+            :class="{ 'bg-orangePrimary': scrolled, 'text-white': scrolled }"
+            >My Account</a>
+
+            <button @click="logout" 
+            class="bg-orangePrimary py-2 px-4" 
+            :class="{ 'bg-orangePrimary': scrolled, 'text-white': scrolled }">
+            Logout</button>
+            </div>
           </div>
           <!-- Mobile menu button -->
           <div class="md:hidden">
@@ -101,11 +115,17 @@
                 <li>
                   <a href="/jobs" class="block py-4 flex border-b-2 border-b-lightGrey">Jobs</a>
                 </li>
-                <li>
+                <li v-if="!isLoggedIn">
                   <a href="/login" class="block py-4 flex border-b-2 border-b-lightGrey">Login</a>
                 </li>
-                <li>
+                <li v-else> 
+                  <a href="/myAccount" class="block py-4 flex border-b-2 border-b-lightGrey">My Account</a>                
+                </li>
+                <li v-if="!isLoggedIn">
                   <a href="/register" class="block py-4 flex">Register</a>
+                </li>
+                <li v-else> 
+                  <a href="/" @click="logout" class="block py-4 flex">Logout</a>
                 </li>
               </ul>
             </div>
@@ -117,6 +137,7 @@
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/userStore';
 export default {
   data() {
     return {
@@ -130,6 +151,12 @@ export default {
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
+  computed: {
+    isLoggedIn() {
+      const authStore = useAuthStore();
+      return authStore.isLoggedIn; // Assuming isLoggedIn is a boolean in your store
+    }
+  },
   methods: {
     handleScroll() {
       if (window.scrollY > 50) {
@@ -140,6 +167,10 @@ export default {
     },
     toggleMobileMenu() {
       this.isMobileMenuOpen = !this.isMobileMenuOpen
+    },
+    logout() {
+      const authStore = useAuthStore();
+      authStore.logout(); // Implement logout logic in your store
     }
   }
 }

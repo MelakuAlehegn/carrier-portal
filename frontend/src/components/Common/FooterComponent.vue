@@ -50,13 +50,21 @@
           <i class="fa fa-chevron-right text-orangePrimary pt-2 font-black text-sm"></i>
           <a href="/about" class="block py-2 pl-2 items-start text-sm">Jobs</a>
         </li>
-        <li class="flex flex-row">
+        <li v-if="!isLoggedIn" class="flex flex-row">
           <i class="fa fa-chevron-right text-orangePrimary pt-2 font-black text-sm"></i>
           <a href="/login" class="block py-2 pl-2 items-start text-sm">Login</a>
         </li>
-        <li class="flex flex-row">
+        <li v-else class="flex flex-row">
+        <i class="fa fa-chevron-right text-orangePrimary pt-2 font-black text-sm"></i>
+        <a href="/myAccount" class="block py-2 pl-2 items-start text-sm">My Account</a>                
+        </li>
+        <li v-if="!isLoggedIn" class="flex flex-row">
           <i class="fa fa-chevron-right text-orangePrimary pt-2 font-black text-sm"></i>
           <a href="/register" class="block py-2 pl-2 items-start text-sm">Register</a>
+        </li>
+        <li v-else class="flex flex-row"> 
+          <i class="fa fa-chevron-right text-orangePrimary pt-2 font-black text-sm"></i>
+          <a href="/" @click="logout" class="block py-2 pl-2 items-start text-sm">Logout</a>
         </li>
       </ul>
     </div>
@@ -67,3 +75,22 @@
   </div>
 </footer>
 </template>
+
+
+<script> 
+import { useAuthStore } from '@/stores/userStore';
+export default {
+  computed: {
+    isLoggedIn() {
+      const authStore = useAuthStore();
+      return authStore.isLoggedIn; // Assuming isLoggedIn is a boolean in your store
+    }
+  },
+  methods: {
+    logout() {
+      const authStore = useAuthStore();
+      authStore.logout();
+    }
+  }
+}
+</script>

@@ -4,9 +4,29 @@ const asyncHandler = require('express-async-handler')
 const path = require('path');
 const User = require('../models/userModels')
 const userVerification = require('../models/userVerification')
+const storeTokenMiddleware =require('../controllers/storeToken')
 const nodemailer = require('nodemailer')
 const { v4: uuidv4 } = require('uuid')
 const Joi = require('joi')
+
+//nodemailer 
+let transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+        user: 'talentmmcy@gmail.com',
+        pass: 'kflhtzqesoayessq'
+    }
+})
+
+//test nodemailer 
+transporter.verify((error, success) => {
+    if (error) {
+        console.log(error)
+    } else {
+        console.log("Ready for message")
+        console.log(success)
+    }
+})
 
 //@Desc     Register Users
 //@route    Post api/users
@@ -36,21 +56,42 @@ const registerUser = asyncHandler(async (req, res, next) => {
         });
 
         if (user) {
-            const token = generateToken(user._id);
+            // const token = generateToken(user._id);
 
-            sendVerificationEmail(user, res);
-            res.status(201).json({
-                _id: user.id,
-                email: user.email,
-                token: token, // Use the generated token here
-                status: "PENDING",
-                message: "verification email sent"
+            // sendVerificationEmail(user, res);
+            // res.status(201).json({
+            //     _id: user.id,
+            //     email: user.email,
+            //     token: token, // Use the generated token here
+            //     status: "PENDING",
+            //     message: "verification email sent"
 
-            });
+            // });
 
-            // Set the token in localStorage
-            res.locals.token = token;
-            storeTokenMiddleware(req, res, next);
+            // // Set the token in localStorage
+            // res.locals.token = token;
+            // storeTokenMiddleware(req, res, next);
+            try {
+                const token = generateToken(user._id);
+                await sendVerificationEmail(user); // Wait for email sending to finish
+    
+                res.status(201).json({
+                    _id: user.id,
+                    email: user.email,
+                    token: token,
+                    status: "PENDING",
+                    message: "verification email sent"
+                });
+                
+                // Set the token in localStorage
+                res.locals.token = token;
+                storeTokenMiddleware(req, res, next);
+            } catch (error) {
+                console.error('Error during registration:', error);
+                res.status(500).json({
+                    message: 'Internal Server Error',
+                });
+            }
 
         } else {
             res.status(400);
@@ -118,7 +159,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
                                         userVerification
                                             .deleteOne({ userId })
                                             .then(() => {
-                                                res.sendFile(path.join(__dirname, "./../frontend/src/views/HomeView.vue"))
+                                                res.redirect('/FormOne')
                                             })
                                             .catch((error) => {
                                                 console.log(error)
@@ -191,6 +232,7 @@ const loginUser = asyncHandler(async (req, res) => {
             })
         } else {
             res.json({
+                _id: user.id,
                 status: "FAILED",
                 message: "Email hasn't been verified yet. Check your inbox!"
             })
@@ -285,10 +327,10 @@ const updateUser = asyncHandler(async (req, res) => {
 })
 const deleteUser = asyncHandler(async (req, res) => {
     // Only allow superadmin and admin can Delet a job
-    if (req.user.role !== 'superadmin') {
-        res.status(403);
-        throw new Error('Access denied.');
-    }
+    // if (req.user.role !== 'superadmin') {
+    //     res.status(403);
+    //     throw new Error('Access denied.');
+    // }
     const user = await User.findById(req.params.id)
     if (!user) {
         res.status(400)
@@ -305,8 +347,17 @@ const generateToken = (id) => {
     })
 }
 
+// const transporter = nodemailer.createTransport({
+//     // Your configuration options here
+//     service: 'Gmail',
+//     auth: {
+//         user: process.env.AUTH_EMAIL,
+//         pass: process.env.AUTH_PASS,
+//     },
+// });
+
 //verfication email function
-const sendVerificationEmail = ({ _id, email }, res) => {
+const sendVerificationEmail = async ({ _id, email }, res) => {
     //url to be used in email
     const currentUrl = "http://localhost:3000/api/"
 
@@ -319,7 +370,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
         subject: "Registration Confirmation",
         html: `<p>Hello</p> <p>Thank you for registering at MMCYTech Talent.</p> 
         <p><b>Please note</b> - you must complete this last step to become a registered member. Click the link below to activate your account.</P>
-        <p>This link expires in 24 hours</P> <p>Press <a href=${currentUrl + "users/verify/" + _id + "/" + uniqueString}>here</a> to proceed.</p>`,
+        <p>This link expires in 24 hours</P> <p>Press <a href=${currentUrl + "users/verify/" + _id + "/" + uniqueString + "?redirectUrl=http://localhost:5173/FormOne"}>here</a> to proceed.</p>`,
     };
 
     //hash  the unique string
@@ -342,17 +393,21 @@ const sendVerificationEmail = ({ _id, email }, res) => {
                         .sendMail(mailOptions)
                         .then(() => {
                             //email sent and verification record saved
+                            if (res) {
                             res.json({
                                 status: "PENDING",
                                 message: "Verification email sent",
                             })
+                        }
                         })
                         .catch((error) => {
                             console.log(error);
+                            if (res) {
                             res.json({
                                 status: "FAILED",
                                 message: "Couldn't send verification email!",
                             })
+                        }
                         })
                 })
                 .catch((error) => {
