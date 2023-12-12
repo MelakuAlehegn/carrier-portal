@@ -1,5 +1,5 @@
 <template>
-  <div class="jobDetails flex flex-col gap-6 w-2/6 bg-white py-8 h-full px-8 rounded-l-[50px]">
+  <div class="jobDetails flex flex-col gap-6                                                                                                                                                                                                                                                                               w-2/6 bg-white py-8 h-full px-8 rounded-l-[50px]">
     <div class="flex justify-start">
       <button
         @click="handleClose"

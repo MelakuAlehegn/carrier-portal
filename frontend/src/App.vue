@@ -6,7 +6,7 @@ import FooterComponent from '@/components/Common/FooterComponent.vue'
 </script>
 
 <template>
-  <div class="bg-veryLightGrey pb-3 font-sans">
+  <div class="pb-3 font-sans">
     <!-- <header> -->
     <!-- <Navbar /> -->
     <NavigationBar />

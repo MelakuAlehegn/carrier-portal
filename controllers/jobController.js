@@ -4,7 +4,7 @@ const { Job, validateJob } = require('../models/jobsModel')
 
 const getJobs = asyncHandler(async (req, res) => {
     let { page, limit, sortBy, ...filter } = req.query
-    limit = Number(limit) || 10
+    limit = Number(limit) || 5
     page = Number(page) || 1
     const skip = (page - 1) * limit
     // const filter = {}
