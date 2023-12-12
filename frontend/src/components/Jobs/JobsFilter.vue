@@ -58,7 +58,7 @@
       <div class="flex flex-col gap-2">
         <p class="text-md text-bluePrimary font-bold">Category</p>
         <Tags
-          :text="'Representatives'"
+          :text="'SDR'"
           :selected="filterqueries.department === 'Representatives'"
           @click="updateFilter('department', 'Representatives')"
         />

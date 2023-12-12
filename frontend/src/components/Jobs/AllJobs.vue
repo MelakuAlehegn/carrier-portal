@@ -1,26 +1,28 @@
 <template>
-  <div class="flex">
-    <div
-      :class="{
-        'w-full transition-all duration-300 ease-in-out': !jobClicked,
-        'w-3/4 transition-all duration-300 ease-in-out': jobClicked
-      }"
-      class="flex flex-col gap-5 py-3 transform origin-left"
-    >
-      <Pagination />
-      <SingleJob
-        v-for="(job, index) in jobs"
-        :key="job._id"
-        @jobClick="handleJobClick(index)"
-        :isSelected="selectedJob === index"
-        :job="job"
+  <div>
+    <div class="flex">
+      <div
+        :class="{
+          'w-full transition-all duration-300 ease-in-out': !jobClicked,
+          'w-3/4 transition-all duration-300 ease-in-out': jobClicked
+        }"
+        class="flex flex-col gap-5 py-3 transform origin-left"
+      >
+        <SingleJob
+          v-for="(job, index) in jobs"
+          :key="job._id"
+          @viewDetails="handleViewDetailsClick(index)"
+          :isSelected="selectedJob === index"
+          :job="job"
+        />
+      </div>
+      <JobDetails
+        v-if="jobClicked && selectedJob !== null"
+        :job="jobs[selectedJob]"
+        @closeDetails="handleCloseDetails"
       />
     </div>
-    <JobDetails
-      v-if="jobClicked && selectedJob !== null"
-      :job="jobs[selectedJob]"
-      @closeDetails="handleCloseDetails"
-    />
+    <Pagination />
   </div>
 </template>
 
@@ -57,7 +59,7 @@ export default {
     )
   },
   methods: {
-    handleJobClick(index) {
+    handleViewDetailsClick(index) {
       this.jobClicked = true
       this.selectedJob = index
     },

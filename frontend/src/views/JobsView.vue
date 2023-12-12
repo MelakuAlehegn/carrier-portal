@@ -1,13 +1,13 @@
 <template>
-  <main class="">
+  <main class="pt-40">
     <!-- filters section -->
     <div
-      class="flex container mt-56 mx-auto text-sm justify-between px-3 py-2 rounded-lg bg-white w-2/12"
+      class="flex container mx-auto text-sm justify-between px-3 py-3 rounded-lg bg-white w-2/12"
     >
-      <button @click="toggleFilter" class="cursor-pointer font-medium">
+      <button @click="toggleFilter" class="cursor-pointer font-medium text-[16px]">
         {{ showFilter ? 'Close Filter' : 'Filter Jobs' }}
       </button>
-      <button v-if="showFilter" @click="clearAllFilters" class="cursor-pointer">Clear All</button>
+      <button v-if="showFilter" @click="clearAllFilters" class="cursor-pointer">Clear</button>
     </div>
     <div v-if="showFilter" class="container mt-7 mx-auto flex justify-center items-center my-2">
       <div
