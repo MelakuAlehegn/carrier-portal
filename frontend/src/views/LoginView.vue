@@ -67,6 +67,7 @@
 import { useAuthStore } from '@/stores/userStore';
 import router  from '@/router';
 import { intendedDestination } from '@/router/navigationGuard.js';
+import formStore from '../stores/formStore';
 
 export default {
   data() {
@@ -82,8 +83,11 @@ export default {
       try {
         const authStore = useAuthStore();
         const userData = await authStore.login(this.email, this.password);
+        if(userData){
         console.log(userData)
         localStorage.setItem('token', userData.token);
+        formStore.commit('updateFormOneData', { email: userData.email });
+        }
         // If login successful, userData will contain user information
         // You can proceed with further actions after successful login
         if (intendedDestination) {
@@ -105,56 +109,3 @@ export default {
   }
 }
 </script>
-
-
-<!-- <script>
-import { apiClient } from '../services/service'
-import { useAuthStore } from '@/stores/userStore';
-
-export default {
-  data() {
-    return {
-      email: '',
-      password: '',
-      showPassword: false,
-      errorMessage: '' // Include errorMessage to display login errors
-    }
-  },
-  methods: {
-    async loginUser() {
-      try {
-      //   const store = authStore(); 
-      //   await store.login(this.email, this.password);
-      // if (store.isAuthenticated) {
-      //     this.$router.push({ name: 'FormOne' });
-      //     console.log('Login successful');
-      //   } else  {
-      //     this.errorMessage = 'Login failed. Please check your credentials.';
-      //     console.error('Error occurred:', this.errorMessage);
-      //   }
-        // const response = await apiClient.post('http://localhost:3000/api/users/login', {
-        //   email: this.email,
-        //   password: this.password
-        // })
-
-        // console.log(response.data) // Log the response or perform actions as needed
-        // // Check if the response contains a message indicating successful email verification
-        // if (response.data.message === 'Email verified successfully. Please log in.') {
-        //   // Redirect the user to the profile form page after successful email verification
-        //   this.$router.push('/FormOne') // Replace '/profile-form' with the route to your profile form
-        // } else {
-        //   // Handle login success without email verification here
-        //   // For example, store the authentication token or navigate to another page
-        //   this.$router.push('/')
-        // }
-        const authStore = useAuthStore();
-        authStore.login(this.email, this.password);
-        } catch (error) {
-        console.error('Login failed:', error.response.data)
-        // Handle the login error here
-        this.errorMessage = error.response.data.message // Set the error message
-      }
-    }
-  }
-}
-</script> -->

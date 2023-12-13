@@ -3,11 +3,15 @@ const bcrypt = require('bcrypt')
 const asyncHandler = require('express-async-handler')
 const path = require('path');
 const User = require('../models/userModels')
+const Document = require('../models/userModels')
+const Education = require('../models/userModels')
+const Experience = require('../models/userModels')
 const userVerification = require('../models/userVerification')
 const storeTokenMiddleware =require('../controllers/storeToken')
 const nodemailer = require('nodemailer')
 const { v4: uuidv4 } = require('uuid')
 const Joi = require('joi')
+const {uploadPhoto, uploadDocument} = require('../controllers/gridController')
 
 //nodemailer 
 let transporter = nodemailer.createTransport({
@@ -227,6 +231,8 @@ const loginUser = asyncHandler(async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                photo: user.photo,
+                city: user.city,
                 verified: user.verified,
                 token: generateToken(user._id)
             })
@@ -312,19 +318,278 @@ const addAdmin = asyncHandler(async (req, res) => {
         throw new Error('Invalid User Data')
     }
 })
+
+// const updateUser = asyncHandler( async (req, res) => {
+//     const { fullName, status,  phone_number, department, bio, gender, city, address, secondaryEmail,
+//     secondaryPhoneNumber, linkedinURL, photo, skills, education, experience, documents } = req.body
+
+//     //hash password
+//     // const salt = await bcrypt.genSalt(10)
+//     // const hashedPassword = await bcrypt.hash(password, salt)
+
+
+//     // if(!fullName || !phone_number || !gender  || !city ){
+//     //     res.status(400)
+//     //     throw new Error('Please add all fields')
+//     // }
+
+//     const users = await User.findByIdAndUpdate(req.params.id, {
+//         fullName,
+//         status,
+//         phone_number,
+//         gender,
+//         department,
+//         bio,
+//         city,
+//         address,
+//         secondaryEmail,
+//         secondaryPhoneNumber,
+//         linkedinURL,
+//         photo,
+//         skills,
+//         education,
+//         experience,
+//         documents
+//     }, {new: true})
+
+//     await users.save();
+
+//     res.status(200).json({users})
+// })
 const updateUser = asyncHandler(async (req, res) => {
-    if (req.user.role !== 'superadmin') {
-        res.status(403);
-        throw new Error('Access denied.');
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updatedUser) {
+      res.status(404);
+      throw new Error('User not found');
     }
-    const user = await User.findById(req.params.id)
+    res.json(updatedUser);
+  });
+// const updateUser = asyncHandler(async (req, res, next) => {
+//     // const { updateData } = req.body;
+  
+//     try {
+//       const user = await User.findById(req.params.id);
+  
+//       if (!user) {
+//         return next(new Error(`User with ID ${req.params.id} not found`));
+//       }
+
+//       const updateData = req.body.updateData || {};
+  
+//       // Update specific fields based on updateData
+//       const {
+//         fullName,
+//         status,
+//         phone_number,
+//         department,
+//         bio,
+//         gender,
+//         city,
+//         address,
+//         secondaryEmail,
+//         secondaryPhoneNumber,
+//         linkedinURL,
+//         photo,
+//         skills,
+//         education,
+//         experience,
+//         documents,
+//       } = updateData;
+  
+//       if (fullName) user.fullName = fullName;
+//       if (status) user.status = status;
+//       if (phone_number) user.phone_number = phone_number;
+//       if (department) user.department = department;
+//       if (bio) user.bio = bio;
+//       if (gender) user.gender = gender;
+//       if (city) user.city = city;
+//       if (address) user.address = address;
+//       if (secondaryEmail) user.secondaryEmail = secondaryEmail;
+//       if (secondaryPhoneNumber) user.secondaryPhoneNumber = secondaryPhoneNumber;
+//       if (linkedinURL) user.linkedinURL = linkedinURL;
+//       if (photo) user.photo = photo;
+//       if (skills) user.skills = skills;
+//       if (education) user.education = education;
+//       if (experience) user.experience = experience;
+//       if (documents) user.documents = documents;
+  
+//       // Save the updated user
+//       await user.save();
+  
+//       res.json({
+//         message: 'User updated successfully',
+//         user,
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   });
+   
+  // Helper functions for updating and creating nested education and experience
+  
+  async function updateEducation(educationId, educationData) {
+    const education = await user.education.findById(educationId);
+    Object.assign(education, educationData); // Update properties like institutionName, fieldOfStudy, etc.
+    await education.save();
+    return education;
+  }
+  
+  async function createEducation(educationData) {
+    const newEducation = new Education(educationData);
+    await newEducation.save();
+    user.education.push(newEducation);
+    return newEducation;
+  }
+
+  async function updateExperience(experienceId, experienceData) {
+    const experience = await user.experience.findById(experienceId);
+    Object.assign(experience, experienceData); // Update properties like institutionName, fieldOfStudy, etc.
+    await experience.save();
+    return experience;
+  }
+  
+  async function createExperience(experienceData) {
+    const newExperience = new Experience(experienceData);
+    await newExperience.save();
+    user.education.push(newExperience);
+    return newExperience;
+  }
+// const updateUser = asyncHandler(async (req, res) => {
+//     if (req.user.role !== 'superadmin') {
+//         res.status(403);
+//         throw new Error('Access denied.');
+//     }
+//     const user = await User.findById(req.params.id)
+//     if (!user) {
+//         res.status(400)
+//         throw new Error('User not Found')
+//     }
+//     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body)
+//     res.status(200).json(updatedUser)
+// })
+// const updateSelf = asyncHandler(async (req, res) => {
+//     const user = await User.findById(req.params.id);
+//     if (!user) {
+//       res.status(400);
+//       throw new Error('User not Found');
+//     }
+//     const updatedSelf = {};
+  
+//     // Handle photo update
+//     if (req.files && req.files.photo) {
+//       try {
+//         const uploadedPhoto = await uploadPhoto(req.files.photo);
+//         updatedSelf.photo = uploadedPhoto.id;
+//       } catch (error) {
+//         // handle error
+//       }
+//     }
+  
+//     // Handle documents update
+//     if (req.files && req.files.documents) {
+//       updatedSelf.documents = [];
+//       for (const file of req.files.documents) {
+//         try {
+//           const uploadedDocument = await uploadDocument(file, file.originalname);
+//           updatedSelf.documents.push(uploadedDocument);
+//         } catch (error) {
+//           // handle error
+//         }
+//       }
+//     }
+
+//     //handle other field updates
+//     for (const key in req.body) {
+//         if (req.body.hasOwnProperty(key) && userSchema.paths.hasOwnProperty(key)) {
+//           updatedSelf[key] = req.body[key];
+//         }
+//       }
+  
+//     // Update the user
+//     try {
+//       await User.findByIdAndUpdate(req.params.id, updatedSelf);
+//       res.status(200).json({ message: 'User updated successfully', 
+//     photo: User.photo,
+// city: User.city});
+//     } catch (error) {
+//       // handle error
+//       console.log('Could not update the user')
+//     }
+//   });
+
+const updateSelf = asyncHandler(async (req, res) => {
+    // Find user
+    const user = await User.findById(req.params.id);
     if (!user) {
-        res.status(400)
-        throw new Error('User not Found')
+      res.status(400);
+      throw new Error('User not Found');
     }
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body)
-    res.status(200).json(updatedUser)
-})
+  
+    // Initialize updated fields object
+    const updatedSelf = {};
+  
+    // Handle photo update
+    if (req.files && req.files.photo) {
+      try {
+        const uploadedPhoto = await uploadPhoto(req.files.photo);
+        updatedSelf.photo = uploadedPhoto.id;
+      } catch (error) {
+        // Handle error
+        console.log('Error uploading photo:', error);
+      }
+    }
+  
+    // Handle documents update
+    if (req.files && req.files.documents) {
+      updatedSelf.documents = [];
+      for (const file of req.files.documents) {
+        try {
+          const uploadedDocument = await uploadDocument(file, file.originalname);
+          updatedSelf.documents.push(uploadedDocument);
+        } catch (error) {
+          // Handle error
+          console.log('Error uploading document:', error);
+        }
+      }
+    }
+  
+    // Handle other field updates
+    for (const key in req.body) {
+      if (req.body.hasOwnProperty(key) && userSchema.paths.hasOwnProperty(key)) {
+        if (key === 'education' || key === 'experience') {
+          // Handle nested object updates
+          const updatedItems = [];
+          for (const item of req.body[key]) {
+            // Update specific fields within the nested object
+            const updatedItem = await user[key].updateOne({ _id: item._id }, { ...item });
+            updatedItems.push(updatedItem);
+          }
+          updatedSelf[key] = updatedItems;
+        } else {
+          updatedSelf[key] = req.body[key];
+        }
+      }
+    }
+  
+    // Update the user
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: user._id },
+        updatedSelf,
+        { new: true }
+      );
+      res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+    } catch (error) {
+      // Handle update error
+      console.log('Error updating user:', error);
+      res.status(500).json({ message: 'Error updating user' });
+    }
+  });
+  
+  
 const deleteUser = asyncHandler(async (req, res) => {
     // Only allow superadmin and admin can Delet a job
     // if (req.user.role !== 'superadmin') {
@@ -347,14 +612,6 @@ const generateToken = (id) => {
     })
 }
 
-// const transporter = nodemailer.createTransport({
-//     // Your configuration options here
-//     service: 'Gmail',
-//     auth: {
-//         user: process.env.AUTH_EMAIL,
-//         pass: process.env.AUTH_PASS,
-//     },
-// });
 
 //verfication email function
 const sendVerificationEmail = async ({ _id, email }, res) => {
@@ -427,4 +684,4 @@ const sendVerificationEmail = async ({ _id, email }, res) => {
 }
 
 
-module.exports = { registerUser, loginUser, getMe, getAllUser, updateUser, deleteUser, addAdmin, verifyEmail, verifyPage }
+module.exports = { registerUser, loginUser, getMe, getAllUser, updateUser, updateSelf, deleteUser, addAdmin, verifyEmail, verifyPage }

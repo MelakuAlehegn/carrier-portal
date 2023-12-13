@@ -39,6 +39,30 @@ const router = createRouter({
       path: '/FormOne',
       name: 'FormOne',
       component: () => import('../views/FormOne.vue'),
+      // meta: { requiresAuth: true }
+    },
+    {
+      path: '/FormTwo',
+      name: 'FormTwo',
+      component: () => import('../views/FormTwo.vue'),
+      // meta: { requiresAuth: true }
+    },
+    {
+      path: '/FormThree',
+      name: 'FormThree',
+      component: () => import('../views/FormThree.vue'),
+      // meta: { requiresAuth: true }
+    },
+    {
+      path: '/myaccount',
+      name: 'myaccount',
+      component: () => import('../views/myAccount.vue'),
+      // meta: { requiresAuth: true }
+    },
+    {
+      path: '/userForm',
+      name: 'userForm',
+      component: () => import('../views/userForm.vue'),
       meta: { requiresAuth: true }
     }
   ]

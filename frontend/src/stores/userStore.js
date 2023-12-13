@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia';
-import { apiClient } from '../services/service'
+import { apiClient } from '../services/service';
 
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
     isLoggedIn: false,
     user: null,
+    userId: null, // New state to store user ID
   }),
   actions: {
     async login(email, password) {
@@ -15,29 +16,56 @@ export const useAuthStore = defineStore({
           password: password
         });
 
-        // Assuming the response contains user data upon successful login
         const userData = response.data;
 
+        // Store the token and user data in localStorage
         localStorage.setItem('token', userData.token);
+        localStorage.setItem('user', JSON.stringify(userData));
 
         this.isLoggedIn = true;
         this.user = userData;
 
-        return userData; // You can return user data if needed
+        // Fetch user data after login and store it in the user state
+        await this.fetchUserData();
+
+        return userData;
       } catch (error) {
-        // Handle login errors here if needed
         console.error('Login failed:', error);
-        throw error; // Rethrow the error to handle it in the component
+        throw error;
       }
     },
     logout() {
-      // Perform logout logic here
-      // Update store state after logout
       localStorage.removeItem('token');
-      // Set authentication status in your Vuex store or similar method
-      store.dispatch('setLoggedIn', false);
+      localStorage.removeItem('user');
       this.isLoggedIn = false;
       this.user = null;
+      this.userId = null; // Clear the user ID on logout
+    },
+    async fetchUserData() {
+      try {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+          throw new Error('Token not found');
+        }
+
+        const response = await apiClient.get('http://localhost:3000/api/users', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const userData = response.data;
+        this.user = userData;
+
+        // Extract user ID and store it
+        this.userId = userData._id;
+
+        localStorage.setItem('user', JSON.stringify(userData));
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        throw error;
+      }
     },
   },
 });
