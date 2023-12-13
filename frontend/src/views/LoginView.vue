@@ -51,7 +51,7 @@
       <!--Button-->
       <button
         type="submit"
-        class="mt-[25px] mb-[30px] text-white bg-orangePrimary py-[10px] w-full p-2 mb-2 bg-5BA4A4 text-white border border-5BA4A4 rounded-lg hover:bg-63BABA transition duration-300 ease-in-out"
+        class="mt-[25px] mb-[30px] text-white bg-orangePrimary py-[10px] w-full p-2 mb-2 bg-5BA4A4 border border-5BA4A4 rounded-lg hover:bg-63BABA transition duration-300 ease-in-out"
       >
         Login
       </button>

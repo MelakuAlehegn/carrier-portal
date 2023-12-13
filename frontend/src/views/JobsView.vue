@@ -1,8 +1,15 @@
 <template>
-  <main class="pt-40">
-    <!-- filters section -->
+  <main class="">
+    <div class="bg-[url('../assets/MMCY-Tech-Job_section-1.png')] md:bg-left-top bg-center">
+      <!-- Banner header -->
+      <header class="text-white text-center py-0 h-full space-y-1 justify-items-end">
+        <div class="px-4 py-10 md:pt-40 md:pl-30 md:pb-24 md:pr-4">
+          <h1 class="md:text-[80px] text-[50px] font-bold">Available Jobs</h1>
+        </div>
+      </header>
+    </div>
     <div
-      class="flex container mx-auto text-sm justify-between px-3 py-3 rounded-lg bg-white w-2/12"
+      class="flex container mt-10 mx-auto text-sm justify-between px-3 py-3 rounded-lg bg-white w-2/12"
     >
       <button @click="toggleFilter" class="cursor-pointer font-medium text-[16px]">
         {{ showFilter ? 'Close Filter' : 'Filter Jobs' }}
