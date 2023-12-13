@@ -47,7 +47,7 @@
         </span>
       </div>
       <!--Error Message-->
-      <p v-if="errorMessage" class="text-red text-[16px] py-2">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-red-600 text-[16px] py-2">{{ errorMessage }}</p>
       <!--Button-->
       <button
         type="submit"
@@ -64,7 +64,10 @@
 </template>
 
 <script>
-import { apiClient } from '../services/service'
+import { useAuthStore } from '@/stores/userStore';
+import router  from '@/router';
+import { intendedDestination } from '@/router/navigationGuard.js';
+import formStore from '../stores/formStore';
 
 export default {
   data() {
@@ -78,16 +81,29 @@ export default {
   methods: {
     async loginUser() {
       try {
-        const response = await apiClient.post('http://localhost:3000/api/users/login', {
-          email: this.email,
-          password: this.password
-        })
-
-        console.log(response.data) // Log the response or perform actions as needed
+        const authStore = useAuthStore();
+        const userData = await authStore.login(this.email, this.password);
+        if(userData){
+        console.log(userData)
+        localStorage.setItem('token', userData.token);
+        formStore.commit('updateFormOneData', { email: userData.email });
+        }
+        // If login successful, userData will contain user information
+        // You can proceed with further actions after successful login
+        if (intendedDestination) {
+          router.push(intendedDestination);
+          // Reset the intendedDestination to null after redirection
+          intendedDestination = null;
+        } else {
+          // Redirect to a default route after login if no intended destination is stored
+          router.push('/'); 
+        }
       } catch (error) {
-        console.error('Login failed:', error.response.data)
+        this.errorMessage = 'Login failed. Please check your credentials.';
+        console.error('Error occurred:', this.errorMessage);
+        // console.error('Login failed:', error.response ? error.response.data : error.message);
         // Handle the login error here
-        this.errorMessage = error.response.data.message // Set the error message
+        // this.errorMessage = error.response ? error.response.data.message : error.message; // Set the error message
       }
     }
   }

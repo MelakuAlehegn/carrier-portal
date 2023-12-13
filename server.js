@@ -1,4 +1,9 @@
 const express = require('express')
+const multer = require('multer')
+const GridFsStorage = require('multer-gridfs-storage')
+const Grid = require('gridfs-stream')
+
+
 const jobRoutes = require('./routes/api/jobRoutes')
 const userRoutes = require('./routes/api/userRoutes')
 
